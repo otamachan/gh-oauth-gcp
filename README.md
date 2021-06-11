@@ -32,5 +32,5 @@ gcloud secrets add-iam-policy-binding secrets --role roles/secretmanager.secretA
 ## Deploy
 ```bash
 # deploy a function
-gcloud functions deploy login --entry-point login --runtime python38 --trigger-http --allow-unauthenticated --memory 128MB --timeout 5
+gcloud functions deploy login --entry-point login --runtime python38 --trigger-http --allow-unauthenticated --memory 128MB --timeout 5 --env-vars-file env.yaml
 ```

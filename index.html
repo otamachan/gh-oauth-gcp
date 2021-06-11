@@ -1,0 +1,33 @@
+<html>
+  <body>
+    <input type="button" value="login" onclick="buttonClick()">
+    <script>
+const loginUrl = 'https://asia-northeast1-gh-oauth-gcp.cloudfunctions.net/login';
+const loc =window.location;
+if (loc.hash === '#callback') {
+  fetch(`${loginUrl}${window.location.search}`)
+  .then(res => res.json())
+  .then(j => {
+    const token = j.access_token;
+    const options = {
+      method: 'post',
+      body: JSON.stringify({query: 'query {viewer {login name}}'}),
+      headers: {
+        Authorization: `bearer ${token}`,
+        Accept: 'application/vnd.github.bane-preview+json',
+      },
+    };
+    return fetch(`https://api.github.com/graphql`, options)
+  })
+  .then(res => res.json())
+  .then(j => {
+    window.document.write('Logined. Hello ' + j.data.viewer.login + '(' + j.data.viewer.name + ') !!');
+    window.history.replaceState(null, null, loc.pathname);
+  });
+}
+function buttonClick() {
+  window.location.assign(loginUrl + '?scope=read%3Auser');
+}
+  </script>
+  </body>
+</html>
